@@ -734,13 +734,9 @@ export default function AIPromptGenerator() {
   })
 
   const [isListening, setIsListening] = useState<string | null>(null)
-  const [isTranscribing, setIsTranscribing] = useState(false)
   const recognitionRef = useRef<SpeechRecognition | null>(null)
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null)
-  const audioChunksRef = useRef<Blob[]>([])
   const activeFieldRef = useRef<string | null>(null)
   const accumulatedTextRef = useRef<string>("")
-  const useFallbackRef = useRef(false)
 
   if (!isAuthenticated) {
     return <PasswordProtection onAuthenticated={() => setIsAuthenticated(true)} />
@@ -760,143 +756,37 @@ export default function AIPromptGenerator() {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
-  const startFallbackRecording = async (field: keyof FormData) => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-      activeFieldRef.current = field
-      audioChunksRef.current = []
-
-      const mimeType = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
-        ? "audio/webm;codecs=opus"
-        : "audio/webm"
-      const recorder = new MediaRecorder(stream, { mimeType })
-
-      recorder.ondataavailable = (e) => {
-        if (e.data.size > 0) audioChunksRef.current.push(e.data)
-      }
-
-      recorder.onstop = async () => {
-        stream.getTracks().forEach((t) => t.stop())
-        const currentField = activeFieldRef.current as keyof FormData | null
-        if (!currentField || audioChunksRef.current.length === 0) return
-
-        setIsTranscribing(true)
-        try {
-          const blob = new Blob(audioChunksRef.current, { type: mimeType })
-          const reader = new FileReader()
-          const base64 = await new Promise<string>((resolve, reject) => {
-            reader.onloadend = () => {
-              const result = reader.result as string
-              resolve(result.split(",")[1])
-            }
-            reader.onerror = reject
-            reader.readAsDataURL(blob)
-          })
-
-          const res = await fetch("/api/transcribe", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ audio: base64, format: "webm" }),
-          })
-
-          if (!res.ok) {
-            const err = await res.json()
-            throw new Error(err.error || "Transcription failed")
-          }
-
-          const { text } = await res.json()
-          if (text) {
-            setFormData((prev) => ({
-              ...prev,
-              [currentField]: prev[currentField]
-                ? prev[currentField] + " " + text
-                : text,
-            }))
-          }
-        } catch (err) {
-          console.error("Transcription error:", err)
-          toast({
-            title: "Transcription failed",
-            description: err instanceof Error ? err.message : "Could not transcribe audio. Please try again.",
-            variant: "destructive",
-          })
-        } finally {
-          setIsTranscribing(false)
-        }
-      }
-
-      mediaRecorderRef.current = recorder
-      recorder.start()
-      setIsListening(field)
-    } catch (err) {
-      console.error("Microphone error:", err)
-      toast({
-        title: "Microphone access denied",
-        description: "Please allow microphone permissions in your browser and try again.",
-        variant: "destructive",
-      })
-    }
-  }
-
   const startVoiceRecognition = (field: keyof FormData) => {
-    console.log("[Voice] startVoiceRecognition called for field:", field)
-    console.log("[Voice] useFallback:", useFallbackRef.current)
-
-    if (useFallbackRef.current) {
-      console.log("[Voice] Using fallback (MediaRecorder)")
-      startFallbackRecording(field)
-      return
-    }
-
     const hasWebkit = "webkitSpeechRecognition" in window
     const hasNative = "SpeechRecognition" in window
-    console.log("[Voice] webkitSpeechRecognition:", hasWebkit, "| SpeechRecognition:", hasNative)
 
     if (!hasWebkit && !hasNative) {
-      console.log("[Voice] No SpeechRecognition API found, switching to fallback")
-      useFallbackRef.current = true
-      startFallbackRecording(field)
+      toast({
+        title: "Not supported",
+        description: "Speech recognition is not supported in this browser. Try Chrome or Edge.",
+        variant: "destructive",
+      })
       return
     }
 
     if (recognitionRef.current) {
-      console.log("[Voice] Stopping previous recognition instance")
       recognitionRef.current.stop()
       recognitionRef.current = null
     }
 
     const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition
     const recognition = new SpeechRecognitionAPI()
-    console.log("[Voice] Created SpeechRecognition instance:", recognition)
 
     const mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
     recognition.continuous = !mobile
     recognition.interimResults = true
     recognition.lang = "en-US"
-    console.log("[Voice] Config — continuous:", recognition.continuous, "| interimResults:", recognition.interimResults, "| lang:", recognition.lang, "| mobile:", mobile)
 
     accumulatedTextRef.current = formData[field]
     activeFieldRef.current = field
 
     recognition.onstart = () => {
-      console.log("[Voice] recognition.onstart fired — listening on field:", field)
       setIsListening(field)
-    }
-
-    recognition.onaudiostart = () => {
-      console.log("[Voice] recognition.onaudiostart — audio capture started")
-    }
-
-    recognition.onspeechstart = () => {
-      console.log("[Voice] recognition.onspeechstart — speech detected")
-    }
-
-    recognition.onspeechend = () => {
-      console.log("[Voice] recognition.onspeechend — speech ended")
-    }
-
-    recognition.onaudioend = () => {
-      console.log("[Voice] recognition.onaudioend — audio capture ended")
     }
 
     recognition.onresult = (event: SpeechRecognitionEvent) => {
@@ -912,58 +802,38 @@ export default function AIPromptGenerator() {
         }
       }
 
-      console.log("[Voice] recognition.onresult — final:", JSON.stringify(finalTranscript), "| interim:", JSON.stringify(interimTranscript))
-
+      // accumulatedTextRef holds the text that existed BEFORE voice started.
+      // event.results already contains ALL finals + current interim cumulatively,
+      // so we just concatenate base + finals + interim — no re-accumulation.
       const baseText = accumulatedTextRef.current
-      const currentText = baseText + (baseText && finalTranscript ? " " : "") + finalTranscript.trim()
-      const displayText = currentText + (currentText && interimTranscript ? " " : "") + interimTranscript
+      const displayText = [baseText, finalTranscript.trim(), interimTranscript].filter(Boolean).join(" ")
 
       handleInputChange(field, displayText.trim())
-
-      if (finalTranscript.trim()) {
-        accumulatedTextRef.current = currentText.trim()
-      }
     }
 
     recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
-      console.error("[Voice] recognition.onerror —", event.error, event.message)
-
-      if (event.error === "no-speech" && mobile) {
-        console.log("[Voice] Ignoring no-speech on mobile")
-        return
-      }
-
-      if (event.error === "network" || event.error === "service-not-allowed") {
-        console.warn("[Voice] SpeechRecognition network/service error, switching to fallback")
-        useFallbackRef.current = true
-        recognitionRef.current = null
-        setIsListening(null)
-        startFallbackRecording(field)
-        return
-      }
+      if (event.error === "no-speech" && mobile) return
 
       activeFieldRef.current = null
       setIsListening(null)
-      toast({
-        title: "Voice recognition error",
-        description: event.error === "not-allowed"
-          ? "Microphone access denied. Please allow mic permissions."
-          : `Error: ${event.error}`,
-        variant: "destructive",
-      })
+      if (event.error !== "aborted") {
+        toast({
+          title: "Voice recognition error",
+          description: event.error === "not-allowed"
+            ? "Microphone access denied. Please allow mic permissions."
+            : `Error: ${event.error}`,
+          variant: "destructive",
+        })
+      }
     }
 
     recognition.onend = () => {
-      console.log("[Voice] recognition.onend — activeField:", activeFieldRef.current)
       if (mobile && activeFieldRef.current) {
-        console.log("[Voice] Mobile: attempting restart...")
         setTimeout(() => {
           if (activeFieldRef.current && recognitionRef.current) {
             try {
               recognitionRef.current.start()
-              console.log("[Voice] Mobile: restarted successfully")
-            } catch (e) {
-              console.error("[Voice] Mobile: restart failed", e)
+            } catch {
               setIsListening(null)
             }
           }
@@ -976,12 +846,9 @@ export default function AIPromptGenerator() {
     }
 
     recognitionRef.current = recognition
-    console.log("[Voice] Calling recognition.start()...")
     try {
       recognition.start()
-      console.log("[Voice] recognition.start() called successfully")
     } catch (e) {
-      console.error("[Voice] recognition.start() threw:", e)
       toast({
         title: "Voice recognition failed",
         description: `Could not start: ${e}`,
@@ -991,23 +858,20 @@ export default function AIPromptGenerator() {
   }
 
   const stopVoiceRecognition = () => {
-    console.log("[Voice] stopVoiceRecognition called")
     if (recognitionRef.current) {
-      console.log("[Voice] Stopping SpeechRecognition")
       recognitionRef.current.stop()
       recognitionRef.current = null
     }
-    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
-      console.log("[Voice] Stopping MediaRecorder")
-      mediaRecorderRef.current.stop()
-    }
-    mediaRecorderRef.current = null
     activeFieldRef.current = null
     setIsListening(null)
     accumulatedTextRef.current = ""
   }
 
   const generateStory = async () => {
+    // Stop voice recognition before generating
+    if (isListening) {
+      stopVoiceRecognition()
+    }
     const currentDate = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
     const futureDate = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toLocaleDateString("en-US", {
       year: "numeric",
@@ -1098,6 +962,10 @@ You do not need to use bullet points or markers for various phases of the Hero's
   }
 
   const resetForm = () => {
+    // Stop voice recognition before resetting
+    if (isListening) {
+      stopVoiceRecognition()
+    }
     setFormData({
       lifeJourney: "",
       currentStruggles: "",
@@ -1131,18 +999,14 @@ You do not need to use bullet points or markers for various phases of the Hero's
   const isFormValid = Object.values(formData).every((value) => value.trim() !== "")
 
   const VoiceButton = ({ field, isActive }: { field: keyof FormData; isActive: boolean }) => {
-    const transcribing = isTranscribing && activeFieldRef.current === field
-
     return (
       <button
         type="button"
-        disabled={transcribing || (isTranscribing && !isActive)}
+        disabled={isListening !== null && !isActive}
         className={`absolute bottom-2 right-2 z-10 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all cursor-pointer ${
-          transcribing
-            ? "bg-blue-500/80 text-white cursor-wait"
-            : isActive 
-              ? "bg-red-500 hover:bg-red-600 text-white" 
-              : "bg-white/10 hover:bg-white/20 text-white/70 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed"
+          isActive 
+            ? "bg-red-500 hover:bg-red-600 text-white" 
+            : "bg-white/10 hover:bg-white/20 text-white/70 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed"
         }`}
         onMouseDown={(e) => {
           e.preventDefault()
@@ -1151,7 +1015,6 @@ You do not need to use bullet points or markers for various phases of the Hero's
         onClick={(e) => {
           e.preventDefault()
           e.stopPropagation()
-          if (transcribing) return
           if (isActive) {
             stopVoiceRecognition()
           } else {
@@ -1159,12 +1022,7 @@ You do not need to use bullet points or markers for various phases of the Hero's
           }
         }}
       >
-        {transcribing ? (
-          <>
-            <Loader2 className="h-3 w-3 animate-spin" />
-            <span>Transcribing...</span>
-          </>
-        ) : isActive ? (
+        {isActive ? (
           <>
             <Square className="h-3 w-3 fill-current" />
             <span>Stop</span>
@@ -1184,6 +1042,10 @@ You do not need to use bullet points or markers for various phases of the Hero's
   }
 
   const goToStep = (step: number) => {
+    // Stop voice recognition when navigating away from current step
+    if (isListening) {
+      stopVoiceRecognition()
+    }
     setStepDirection(step > currentStep ? 1 : -1)
     setCurrentStep(step)
   }
@@ -1226,6 +1088,10 @@ You do not need to use bullet points or markers for various phases of the Hero's
               variant="ghost"
               size="sm"
               onClick={() => {
+                // Stop voice if active before any navigation
+                if (isListening) {
+                  stopVoiceRecognition()
+                }
                 if (showStory && !isGenerating) {
                   setShowStory(false)
                   setGeneratedStory("")
@@ -1326,19 +1192,19 @@ You do not need to use bullet points or markers for various phases of the Hero's
                           </Button>
                         </div>
 
-                        <div className="pt-3 border-t border-white/10 flex items-center justify-between">
-                          <p className="text-xs text-white/40">
-                            AI Merge Framework
-                          </p>
-                          <div className="flex items-center gap-3">
-                            <a href="https://www.linkedin.com/in/manujaggarwal/" target="_blank" rel="noopener noreferrer" className="text-[#0A66C2] hover:brightness-125 transition-all" aria-label="LinkedIn">
-                              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                        <div className="pt-3 border-t border-white/10 space-y-3">
+                          <div className="flex flex-wrap gap-2">
+                            <a href="https://www.linkedin.com/in/manujaggarwal/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#0A66C2]/10 border border-[#0A66C2]/20 text-[#0A66C2] hover:bg-[#0A66C2]/20 transition-all text-xs">
+                              <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                              Connect with Manuj on LinkedIn
                             </a>
-                            <a href="mailto:manuj@tetranoodle.com" className="text-[#EA4335] hover:brightness-125 transition-all" aria-label="Email">
-                              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                            <a href="mailto:manuj@tetranoodle.com" className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#EA4335]/10 border border-[#EA4335]/20 text-[#EA4335] hover:bg-[#EA4335]/20 transition-all text-xs">
+                              <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                              Email Manuj
                             </a>
-                            <a href="https://tetranoodle.com" target="_blank" rel="noopener noreferrer" className="text-[#22C55E] hover:brightness-125 transition-all" aria-label="Website">
-                              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                            <a href="https://tetranoodle.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#22C55E]/10 border border-[#22C55E]/20 text-[#22C55E] hover:bg-[#22C55E]/20 transition-all text-xs">
+                              <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                              Visit TetraNoodle Website
                             </a>
                           </div>
                         </div>
@@ -1470,16 +1336,19 @@ You do not need to use bullet points or markers for various phases of the Hero's
           </div>
         </div>
 
-        <div className="px-3 sm:px-6 pb-4 sm:pb-6 max-w-3xl mx-auto w-full flex items-center justify-center gap-4">
-          <a href="https://www.linkedin.com/in/manujaggarwal/" target="_blank" rel="noopener noreferrer" className="text-[#0A66C2] hover:brightness-125 transition-all" aria-label="LinkedIn">
-            <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-          </a>
-          <a href="mailto:manuj@tetranoodle.com" className="text-[#EA4335] hover:brightness-125 transition-all" aria-label="Email">
-            <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-          </a>
-          <a href="https://tetranoodle.com" target="_blank" rel="noopener noreferrer" className="text-[#22C55E] hover:brightness-125 transition-all" aria-label="Website">
-            <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-          </a>
+        <div className="px-3 sm:px-6 pb-4 sm:pb-6 max-w-3xl mx-auto w-full flex flex-col items-center gap-2">
+          <div className="flex items-center justify-center gap-4">
+            <a href="https://www.linkedin.com/in/manujaggarwal/" target="_blank" rel="noopener noreferrer" className="text-[#0A66C2] hover:brightness-125 transition-all" aria-label="LinkedIn">
+              <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            </a>
+            <a href="mailto:manuj@tetranoodle.com" className="text-[#EA4335] hover:brightness-125 transition-all" aria-label="Email">
+              <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            </a>
+            <a href="https://tetranoodle.com" target="_blank" rel="noopener noreferrer" className="text-[#22C55E] hover:brightness-125 transition-all" aria-label="Website">
+              <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            </a>
+          </div>
+          <p className="text-[10px] text-white/30 text-center">AI Merge Framework &middot; Published in Mensa Research Journal</p>
         </div>
       </div>
     </div>
