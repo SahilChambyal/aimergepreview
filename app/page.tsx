@@ -20,6 +20,7 @@ import {
   Eye,
   EyeClosed,
   ArrowRight,
+  Mail,
   Compass,
   Brain,
   Route,
@@ -40,11 +41,14 @@ interface FormData {
 }
 
 function PasswordProtection({ onAuthenticated }: { onAuthenticated: () => void }) {
+  const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [focusedInput, setFocusedInput] = useState<string | null>(null)
+  const [emailVerified, setEmailVerified] = useState(false)
+  const [suggestion, setSuggestion] = useState<string | null>(null)
   
   const { toast } = useToast()
 
@@ -64,7 +68,40 @@ function PasswordProtection({ onAuthenticated }: { onAuthenticated: () => void }
     mouseY.set(0)
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsLoading(true)
+    setError("")
+    setSuggestion(null)
+
+    try {
+      const res = await fetch("/api/verify-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim() }),
+      })
+
+      const data = await res.json()
+
+      if (data.success) {
+        setEmailVerified(true)
+        if (data.did_you_mean) {
+          setSuggestion(data.did_you_mean)
+        }
+      } else {
+        setError(data.message || "Email verification failed.")
+        if (data.did_you_mean) {
+          setSuggestion(data.did_you_mean)
+        }
+      }
+    } catch {
+      setError("Could not verify email. Please try again.")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handlePasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
     
@@ -82,6 +119,15 @@ function PasswordProtection({ onAuthenticated }: { onAuthenticated: () => void }
         setIsLoading(false)
       }
     }, 1000)
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!emailVerified) {
+      handleEmailSubmit(e)
+    } else {
+      handlePasswordSubmit(e)
+    }
   }
 
   return (
@@ -207,72 +253,177 @@ function PasswordProtection({ onAuthenticated }: { onAuthenticated: () => void }
                   transition={{ delay: 0.3 }}
                   className="text-white/60 text-xs"
                 >
-                  Enter the password to access the Self-Identity Preview
+                  {emailVerified ? "Enter the password to continue" : "Enter your email to get started"}
                 </motion.p>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4 relative z-10">
-                <motion.div className="space-y-3">
-                  <motion.div 
-                    className={`relative ${focusedInput === "password" ? 'z-10' : ''}`}
-                    whileFocus={{ scale: 1.02 }}
-                    whileHover={{ scale: 1.01 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                  >
-                    <div className="absolute -inset-[0.5px] bg-linear-to-r from-white/10 via-white/5 to-white/10 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none" />
-                    
-                    <div className="relative flex items-center overflow-hidden rounded-lg">
-                      <Lock className={`absolute left-3 w-4 h-4 transition-all duration-300 ${
-                        focusedInput === "password" ? 'text-white' : 'text-white/40'
-                      }`} />
-                      
-                      <input
-                        type={showPassword ? "text" : "password"}
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => {
-                          setPassword(e.target.value);
-                          setError("");
-                        }}
-                        onFocus={() => setFocusedInput("password")}
-                        onBlur={() => setFocusedInput(null)}
-                        className={`w-full bg-white/5 border border-transparent focus:border-white/20 text-white placeholder:text-white/30 h-10 transition-all duration-300 pl-10 pr-10 focus:bg-white/10 outline-none text-sm ${error ? 'border-red-500/50 bg-red-500/5' : ''}`}
-                      />
-                      
-                      <div 
-                        onClick={() => setShowPassword(!showPassword)} 
-                        className="absolute right-3 cursor-pointer"
-                      >
-                        {showPassword ? (
-                          <Eye className="w-4 h-4 text-white/40 hover:text-white transition-colors duration-300" />
-                        ) : (
-                          <EyeClosed className="w-4 h-4 text-white/40 hover:text-white transition-colors duration-300" />
-                        )}
-                      </div>
-                      
-                      {focusedInput === "password" && (
-                        <motion.div 
-                          layoutId="input-highlight"
-                          className="absolute inset-0 bg-white/5 -z-10"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                          transition={{ duration: 0.2 }}
-                        />
-                      )}
-                    </div>
-                  </motion.div>
-                  
-                  {error && (
-                    <motion.p 
-                      initial={{ opacity: 0, y: -5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="text-xs text-red-400 text-center"
+                <AnimatePresence mode="wait">
+                  {!emailVerified ? (
+                    <motion.div
+                      key="email-step"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{ duration: 0.25 }}
+                      className="space-y-3"
                     >
-                      {error}
-                    </motion.p>
+                      <motion.div 
+                        className={`relative ${focusedInput === "email" ? 'z-10' : ''}`}
+                        whileHover={{ scale: 1.01 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                      >
+                        <div className="absolute -inset-[0.5px] bg-linear-to-r from-white/10 via-white/5 to-white/10 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none" />
+                        
+                        <div className="relative flex items-center overflow-hidden rounded-lg">
+                          <Mail className={`absolute left-3 w-4 h-4 transition-all duration-300 ${
+                            focusedInput === "email" ? 'text-white' : 'text-white/40'
+                          }`} />
+                          
+                          <input
+                            type="email"
+                            placeholder="Email address"
+                            value={email}
+                            onChange={(e) => {
+                              setEmail(e.target.value);
+                              setError("");
+                              setSuggestion(null);
+                            }}
+                            onFocus={() => setFocusedInput("email")}
+                            onBlur={() => setFocusedInput(null)}
+                            className={`w-full bg-white/5 border border-transparent focus:border-white/20 text-white placeholder:text-white/30 h-10 transition-all duration-300 pl-10 pr-4 focus:bg-white/10 outline-none text-sm ${error ? 'border-red-500/50 bg-red-500/5' : ''}`}
+                          />
+                          
+                          {focusedInput === "email" && (
+                            <motion.div 
+                              layoutId="input-highlight"
+                              className="absolute inset-0 bg-white/5 -z-10"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              transition={{ duration: 0.2 }}
+                            />
+                          )}
+                        </div>
+                      </motion.div>
+                      
+                      {suggestion && (
+                        <motion.p
+                          initial={{ opacity: 0, y: -5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="text-xs text-blue-400 text-center"
+                        >
+                          Did you mean{" "}
+                          <button
+                            type="button"
+                            className="underline hover:text-blue-300 transition-colors"
+                            onClick={() => {
+                              setEmail(suggestion);
+                              setSuggestion(null);
+                              setError("");
+                            }}
+                          >
+                            {suggestion}
+                          </button>
+                          ?
+                        </motion.p>
+                      )}
+
+                      {error && (
+                        <motion.p 
+                          initial={{ opacity: 0, y: -5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="text-xs text-red-400 text-center"
+                        >
+                          {error}
+                        </motion.p>
+                      )}
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="password-step"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 20 }}
+                      transition={{ duration: 0.25 }}
+                      className="space-y-3"
+                    >
+                      <div className="flex items-center gap-2 px-1 mb-1">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setEmailVerified(false);
+                            setPassword("");
+                            setError("");
+                          }}
+                          className="text-white/40 hover:text-white transition-colors"
+                        >
+                          <ArrowLeft className="w-3.5 h-3.5" />
+                        </button>
+                        <span className="text-xs text-white/50 truncate">{email}</span>
+                      </div>
+
+                      <motion.div 
+                        className={`relative ${focusedInput === "password" ? 'z-10' : ''}`}
+                        whileHover={{ scale: 1.01 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                      >
+                        <div className="absolute -inset-[0.5px] bg-linear-to-r from-white/10 via-white/5 to-white/10 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none" />
+                        
+                        <div className="relative flex items-center overflow-hidden rounded-lg">
+                          <Lock className={`absolute left-3 w-4 h-4 transition-all duration-300 ${
+                            focusedInput === "password" ? 'text-white' : 'text-white/40'
+                          }`} />
+                          
+                          <input
+                            type={showPassword ? "text" : "password"}
+                            placeholder="Password"
+                            value={password}
+                            onChange={(e) => {
+                              setPassword(e.target.value);
+                              setError("");
+                            }}
+                            onFocus={() => setFocusedInput("password")}
+                            onBlur={() => setFocusedInput(null)}
+                            className={`w-full bg-white/5 border border-transparent focus:border-white/20 text-white placeholder:text-white/30 h-10 transition-all duration-300 pl-10 pr-10 focus:bg-white/10 outline-none text-sm ${error ? 'border-red-500/50 bg-red-500/5' : ''}`}
+                          />
+                          
+                          <div 
+                            onClick={() => setShowPassword(!showPassword)} 
+                            className="absolute right-3 cursor-pointer"
+                          >
+                            {showPassword ? (
+                              <Eye className="w-4 h-4 text-white/40 hover:text-white transition-colors duration-300" />
+                            ) : (
+                              <EyeClosed className="w-4 h-4 text-white/40 hover:text-white transition-colors duration-300" />
+                            )}
+                          </div>
+                          
+                          {focusedInput === "password" && (
+                            <motion.div 
+                              layoutId="input-highlight"
+                              className="absolute inset-0 bg-white/5 -z-10"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              transition={{ duration: 0.2 }}
+                            />
+                          )}
+                        </div>
+                      </motion.div>
+                      
+                      {error && (
+                        <motion.p 
+                          initial={{ opacity: 0, y: -5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="text-xs text-red-400 text-center"
+                        >
+                          {error}
+                        </motion.p>
+                      )}
+                    </motion.div>
                   )}
-                </motion.div>
+                </AnimatePresence>
 
                 <motion.button
                   whileHover={{ scale: 1.02 }}
@@ -310,7 +461,7 @@ function PasswordProtection({ onAuthenticated }: { onAuthenticated: () => void }
                           exit={{ opacity: 0 }}
                           className="flex items-center justify-center gap-1 text-sm font-medium"
                         >
-                          Access Preview
+                          {emailVerified ? "Access Preview" : "Continue"}
                           <ArrowRight className="w-3 h-3 group-hover/button:translate-x-1 transition-transform duration-300" />
                         </motion.span>
                       )}
