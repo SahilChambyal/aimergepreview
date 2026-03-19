@@ -9,7 +9,6 @@
     "start": "next start"
   },
   "dependencies": {
-    "@clerk/nextjs": "^7.0.5",
     "@elevenlabs/elevenlabs-js": "^2.39.0",
     "@elevenlabs/react": "^0.14.3",
     "@hookform/resolvers": "^3.10.0",
