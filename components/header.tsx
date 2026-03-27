@@ -3,8 +3,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { Sun, Moon, Menu, X, ArrowRight } from "lucide-react"
-import { useTheme } from "next-themes"
+import { Menu, X, ArrowRight } from "lucide-react"
 import { useState } from "react"
 
 const navLinks = [
@@ -16,63 +15,64 @@ const navLinks = [
 ]
 
 export function Header() {
-  const { theme, setTheme } = useTheme()
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
     <>
-      <header className="sticky top-0 z-50 w-full border-b-2 border-foreground/10 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
+      <header className="sticky top-0 z-50 w-full border-b-3 border-foreground/10 bg-background/80 backdrop-blur-xl">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-14 sm:h-16 items-center justify-between">
+          <div className="flex h-16 sm:h-18 items-center justify-between">
             {/* Logo */}
-            <Link href="/" className="flex items-center shrink-0">
+            <Link href="/" className="flex items-center shrink-0 group">
               <Image
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Colored%20%28Transparent%29-i3BIGX38o1jOu8WEN9AsCy09XzplWy.png"
                 alt="AIMerge"
-                width={120}
-                height={28}
-                className="dark:hidden"
-                style={{ height: 28, width: 'auto' }}
+                width={130}
+                height={32}
+                className="dark:hidden transition-transform duration-200 group-hover:scale-105"
+                style={{ height: 32, width: 'auto' }}
                 priority
                 unoptimized
               />
               <Image
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/White%20%28Transparent%29-ch7lxVfW4eNHZNaDbk70Bpfil2XuOt.png"
                 alt="AIMerge"
-                width={120}
-                height={28}
-                className="hidden dark:block"
-                style={{ height: 28, width: 'auto' }}
+                width={130}
+                height={32}
+                className="hidden dark:block transition-transform duration-200 group-hover:scale-105"
+                style={{ height: 32, width: 'auto' }}
                 priority
                 unoptimized
               />
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-1">
+            <nav className="hidden lg:flex items-center gap-0.5">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="px-3 xl:px-4 py-2 text-sm font-semibold text-muted-foreground hover:text-primary transition-colors rounded-md hover:bg-primary/5"
+                  className="relative px-4 py-2 text-sm font-bold text-muted-foreground hover:text-foreground transition-colors duration-200 rounded-lg group"
                 >
                   {link.label}
+                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-primary rounded-full transition-all duration-300 group-hover:w-2/3" />
                 </Link>
               ))}
             </nav>
 
             {/* Right Actions */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               {/* CTA */}
-              <Button className="hidden sm:flex ml-1 sm:ml-2 font-bold text-sm rounded-lg neu-shadow-sm hover:translate-x-px hover:translate-y-px hover:shadow-none transition-all duration-200">
+              <Button className="hidden sm:inline-flex h-10 px-5 font-extrabold text-sm rounded-xl neu-border-primary neu-shadow-primary-sm neu-btn-press bg-primary text-primary-foreground">
                 Begin Experience
+                <ArrowRight className="ml-1.5 h-4 w-4" />
               </Button>
 
               {/* Mobile Menu Toggle */}
               <button
                 aria-label="Open menu"
                 onClick={() => setMobileOpen(true)}
-                className="lg:hidden flex h-10 w-10 items-center justify-center rounded-xl border-2 border-foreground/10 hover:border-primary hover:bg-primary/5 transition-all duration-200 ml-1"
+                className="lg:hidden flex h-11 w-11 items-center justify-center rounded-xl neu-border-thin hover:neu-shadow-xs transition-all duration-200"
               >
                 <Menu className="h-5 w-5" />
               </button>
@@ -86,39 +86,39 @@ export function Header() {
         <div className="fixed inset-0 z-100 lg:hidden">
           {/* Backdrop */}
           <div
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-fade-in-up"
+            className="absolute inset-0 bg-foreground/50 backdrop-blur-sm animate-fade-in-up"
             onClick={() => setMobileOpen(false)}
             aria-hidden="true"
           />
 
           {/* Menu Panel */}
-          <div className="absolute inset-x-0 top-0 bg-background border-b-2 border-primary/20 shadow-2xl animate-fade-in-up [animation-duration:0.3s]">
+          <div className="absolute inset-x-0 top-0 bg-background border-b-3 border-foreground shadow-2xl animate-fade-in-up [animation-duration:0.3s]">
             {/* Header row */}
-            <div className="flex items-center justify-between px-4 sm:px-6 h-14 sm:h-16 border-b-2 border-foreground/5">
+            <div className="flex items-center justify-between px-4 sm:px-6 h-16 sm:h-18 border-b-3 border-foreground/10">
               <Link href="/" className="flex items-center" onClick={() => setMobileOpen(false)}>
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Colored%20%28Transparent%29-i3BIGX38o1jOu8WEN9AsCy09XzplWy.png"
                   alt="AIMerge"
-                  width={120}
-                  height={28}
+                  width={130}
+                  height={32}
                   className="dark:hidden"
-                  style={{ height: 28, width: 'auto' }}
+                  style={{ height: 32, width: 'auto' }}
                   unoptimized
                 />
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/White%20%28Transparent%29-ch7lxVfW4eNHZNaDbk70Bpfil2XuOt.png"
                   alt="AIMerge"
-                  width={120}
-                  height={28}
+                  width={130}
+                  height={32}
                   className="hidden dark:block"
-                  style={{ height: 28, width: 'auto' }}
+                  style={{ height: 32, width: 'auto' }}
                   unoptimized
                 />
               </Link>
               <button
                 aria-label="Close menu"
                 onClick={() => setMobileOpen(false)}
-                className="flex h-10 w-10 items-center justify-center rounded-xl border-2 border-foreground/10 hover:border-primary hover:bg-primary/5 transition-all duration-200"
+                className="flex h-11 w-11 items-center justify-center rounded-xl neu-border-thin hover:neu-shadow-xs transition-all duration-200"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -131,11 +131,11 @@ export function Header() {
                   key={link.href}
                   href={link.href}
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center justify-between px-4 py-3.5 text-lg font-bold text-foreground hover:text-primary hover:bg-primary/5 rounded-xl transition-all duration-200"
+                  className="flex items-center justify-between px-4 py-4 text-lg font-extrabold text-foreground hover:text-primary hover:bg-primary/5 rounded-xl transition-all duration-200 group"
                   style={{ animationDelay: `${i * 50}ms` }}
                 >
                   {link.label}
-                  <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                  <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all duration-200" />
                 </Link>
               ))}
             </nav>
@@ -144,12 +144,12 @@ export function Header() {
             <div className="px-4 sm:px-6 pb-6">
               <Button
                 onClick={() => setMobileOpen(false)}
-                className="w-full h-14 text-base font-bold rounded-xl neu-shadow hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all duration-200"
+                className="w-full h-14 text-base font-extrabold rounded-xl neu-border-primary neu-shadow-primary neu-btn-press"
               >
                 Begin Experience
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
-              <p className="text-center text-xs text-muted-foreground mt-4">
+              <p className="text-center text-xs text-muted-foreground mt-4 font-medium">
                 10 minutes. Private & secure.
               </p>
             </div>

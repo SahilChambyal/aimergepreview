@@ -45,35 +45,39 @@ export function FaqSection() {
   }, [])
 
   return (
-    <section ref={sectionRef} className="py-16 sm:py-20 md:py-28 lg:py-32" id="faq">
+    <section ref={sectionRef} className="py-20 sm:py-24 md:py-32 lg:py-40" id="faq">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className={`grid lg:grid-cols-12 gap-8 sm:gap-12 lg:gap-16 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`}>
+        <div className={`grid lg:grid-cols-12 gap-10 sm:gap-12 lg:gap-20 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`}>
           {/* Left Column - Header */}
           <div className="lg:col-span-4">
-            <span className="inline-block px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest text-primary bg-primary/10 neu-border-primary mb-6">
+            <span className="inline-block px-4 py-1.5 rounded-lg text-xs font-black uppercase tracking-widest text-primary bg-secondary neu-border-primary mb-6">
               FAQ
             </span>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-foreground">
-              Common questions
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter text-foreground leading-[1.0]">
+              Common
+              <span className="block text-primary">questions</span>
             </h2>
-            <p className="mt-4 text-base sm:text-lg text-muted-foreground leading-relaxed">
+            <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
               Everything you need to know before you begin.
             </p>
+
+            {/* Decorative element */}
+            <div className="hidden lg:block mt-8 w-20 h-20 rounded-xl border-3 border-primary/20 bg-secondary/50" />
           </div>
 
           {/* Right Column - Accordion */}
           <div className="lg:col-span-8">
-            <Accordion type="single" collapsible className="w-full">
+            <Accordion type="single" collapsible className="w-full space-y-3">
               {faqs.map((faq, index) => (
-                <AccordionItem 
-                  key={index} 
+                <AccordionItem
+                  key={index}
                   value={`item-${index}`}
-                  className="border-b-2 border-foreground/5 py-1 sm:py-2"
+                  className="border-3 border-foreground/8 rounded-xl px-6 data-[state=open]:border-primary data-[state=open]:bg-secondary/30 transition-all duration-300 data-[state=open]:neu-shadow-primary-sm"
                 >
-                  <AccordionTrigger className="text-left text-sm sm:text-base md:text-lg font-bold hover:text-primary transition-colors py-4 sm:py-5">
+                  <AccordionTrigger className="text-left text-base sm:text-lg font-extrabold hover:text-primary transition-colors py-5 hover:no-underline">
                     {faq.question}
                   </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground leading-relaxed pb-4 sm:pb-5 pr-4 sm:pr-8 text-sm sm:text-base">
+                  <AccordionContent className="text-muted-foreground leading-relaxed pb-5 pr-8 text-base">
                     {faq.answer}
                   </AccordionContent>
                 </AccordionItem>

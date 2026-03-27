@@ -1,6 +1,6 @@
 "use client"
 
-import { Quote } from "lucide-react"
+import { Quote, Star } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 
 const testimonials = [
@@ -12,14 +12,14 @@ const testimonials = [
     highlight: true,
   },
   {
-    quote: "I arrived thinking I knew what was holding me back. What surfaced was something completely different — and completely obvious once I saw it. That is the only way I can describe it.",
+    quote: "I arrived thinking I knew what was holding me back. What surfaced was something completely different — and completely obvious once I saw it.",
     author: "Managing Director",
     company: "Investment Firm",
     location: "Dubai",
     highlight: false,
   },
   {
-    quote: "I am not someone who does quizzes or assessments. This is not that. It is the closest thing to a conversation with the clearest version of yourself that I have found.",
+    quote: "I am not someone who does quizzes or assessments. This is not that. It is the closest thing to a conversation with the clearest version of yourself.",
     author: "Operator",
     company: "Scaling Consumer Brand",
     location: "New York",
@@ -48,44 +48,51 @@ export function TestimonialsSection() {
   }, [])
 
   return (
-    <section ref={sectionRef} className="py-16 sm:py-20 md:py-28 lg:py-32 bg-muted/30" id="testimonials">
+    <section ref={sectionRef} className="py-20 sm:py-24 md:py-32 lg:py-40 bg-secondary/30" id="testimonials">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className={`max-w-3xl mx-auto text-center mb-12 sm:mb-16 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`}>
-          <span className="inline-block px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest text-primary bg-primary/10 neu-border-primary mb-6">
+        <div className={`max-w-3xl mx-auto text-center mb-16 sm:mb-20 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`}>
+          <span className="inline-block px-4 py-1.5 rounded-lg text-xs font-black uppercase tracking-widest text-primary bg-secondary neu-border-primary mb-6">
             Testimonials
           </span>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tight text-foreground">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter text-foreground">
             What leaders say after
           </h2>
-          <p className="mt-4 text-base sm:text-lg text-muted-foreground">
-            Real experiences from real leaders.
-          </p>
+          <div className="flex items-center justify-center gap-1 mt-4">
+            {[1,2,3,4,5].map(i => (
+              <Star key={i} className="h-5 w-5 fill-primary text-primary" />
+            ))}
+          </div>
         </div>
 
-        {/* Testimonials Bento Grid */}
-        <div className="grid sm:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
+        {/* Testimonials Grid - asymmetric bento layout */}
+        <div className="grid sm:grid-cols-2 gap-5 sm:gap-6">
           {testimonials.map((testimonial, index) => (
             <div
               key={index}
-              className={`group p-6 sm:p-8 rounded-2xl border-2 bg-background transition-all duration-300 hover:-translate-y-1 ${
-                testimonial.highlight 
-                  ? 'border-primary neu-shadow hover:neu-shadow-lg' 
-                  : 'border-foreground/10 hover:border-primary hover:neu-shadow'
+              className={`group relative p-7 sm:p-8 rounded-2xl border-3 bg-card transition-all duration-300 ${
+                testimonial.highlight
+                  ? 'border-primary neu-shadow-primary-sm neu-card-hover'
+                  : 'border-foreground/10 neu-card-hover'
               } ${isVisible ? `animate-fade-in-up delay-${(index + 1) * 100}` : 'opacity-0'}`}
             >
-              <Quote className={`h-8 w-8 sm:h-10 sm:w-10 mb-4 sm:mb-6 transition-colors ${
-                testimonial.highlight ? 'text-primary' : 'text-primary/20 group-hover:text-primary/40'
+              {/* Quote icon */}
+              <Quote className={`h-10 w-10 mb-5 transition-colors duration-300 ${
+                testimonial.highlight ? 'text-primary' : 'text-foreground/10 group-hover:text-primary/40'
               }`} />
+
+              {/* Quote text */}
               <blockquote className="text-foreground text-base sm:text-lg leading-relaxed font-medium">
                 &ldquo;{testimonial.quote}&rdquo;
               </blockquote>
-              <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t-2 border-foreground/5 flex items-center justify-between flex-wrap gap-3">
+
+              {/* Author */}
+              <div className="mt-8 pt-6 border-t-3 border-foreground/5 flex items-center justify-between flex-wrap gap-3">
                 <div>
-                  <p className="font-bold text-foreground">{testimonial.author}</p>
-                  <p className="text-sm text-muted-foreground">{testimonial.company}</p>
+                  <p className="font-extrabold text-foreground">{testimonial.author}</p>
+                  <p className="text-sm text-muted-foreground font-medium">{testimonial.company}</p>
                 </div>
-                <span className="text-xs font-bold text-primary px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
+                <span className="text-xs font-black text-primary px-3 py-1.5 rounded-lg bg-secondary border-2 border-primary/20">
                   {testimonial.location}
                 </span>
               </div>

@@ -3,30 +3,29 @@
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { ArrowRight, Shield, Play } from "lucide-react"
-import { useEffect, useRef, useState } from "react"
+import { ArrowRight, Shield, Zap } from "lucide-react"
+import { useEffect, useState } from "react"
 
 export function HeroSection() {
   const [isVisible, setIsVisible] = useState(false)
-  const sectionRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
     setIsVisible(true)
   }, [])
 
   return (
-    <section ref={sectionRef} className="relative min-h-[90vh] flex flex-col" id="hero">
+    <section className="relative min-h-[92vh] flex flex-col" id="hero">
       {/* Announcement Banner */}
-      <div className="border-b-2 border-foreground/10 bg-primary/5">
+      <div className="border-b-3 border-foreground/8 bg-secondary/50">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-center gap-2 py-3 text-sm">
-            <span className="relative flex h-2 w-2">
+          <div className="flex items-center justify-center gap-3 py-3 text-sm">
+            <span className="relative flex h-2.5 w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary" />
             </span>
-            <span className="text-muted-foreground font-semibold tracking-wide uppercase text-xs">The Inner Light Experience</span>
-            <span className="hidden sm:inline text-border">|</span>
-            <span className="hidden sm:inline text-primary font-semibold hover:underline cursor-pointer text-xs uppercase tracking-wide">
+            <span className="text-foreground font-bold tracking-wide uppercase text-xs">The Inner Light Experience</span>
+            <span className="hidden sm:inline text-foreground/20 font-bold">|</span>
+            <span className="hidden sm:inline text-primary font-bold hover:underline cursor-pointer text-xs uppercase tracking-wide">
               Discover your permanent state of clarity
             </span>
           </div>
@@ -35,76 +34,80 @@ export function HeroSection() {
 
       {/* Hero Content */}
       <div className="flex-1 flex items-center justify-center relative">
-        {/* Background Elements */}
+        {/* Background - subtle geometric shapes */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent" />
-          <div className="absolute top-20 right-10 w-72 h-72 bg-primary/5 rounded-full blur-3xl" />
-          <div className="absolute bottom-20 left-10 w-96 h-96 bg-primary/3 rounded-full blur-3xl" />
+          <div className="absolute top-20 right-[10%] w-64 h-64 border-3 border-primary/10 rounded-full" />
+          <div className="absolute bottom-32 left-[5%] w-40 h-40 border-3 border-primary/8 rotate-45" />
+          <div className="absolute top-1/3 left-1/4 w-3 h-3 bg-primary/20 rounded-full" />
+          <div className="absolute top-1/2 right-1/3 w-2 h-2 bg-primary/30 rounded-full" />
         </div>
 
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20 lg:py-24 relative z-10 w-full">
-          <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             {/* Left - Copy */}
             <div className={`${isVisible ? 'animate-fade-in-left' : 'opacity-0'}`}>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full neu-border-primary bg-primary/5 text-primary text-sm font-bold mb-6">
-                <Play className="h-3 w-3 fill-current" />
+              {/* Badge */}
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full neu-border-primary bg-secondary text-primary text-sm font-extrabold mb-8">
+                <Zap className="h-3.5 w-3.5 fill-current" />
                 10 min experience
               </div>
 
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tight text-foreground leading-[1.05]">
+              {/* Headline - dramatic scale */}
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tighter text-foreground leading-[0.95]">
                 <span className="block">One honest</span>
-                <span className="block">answer away from</span>
-                <span className="inline-block mt-1 text-primary relative">
-                  your best self.
-                  <svg className="absolute -bottom-2 left-0 w-full" viewBox="0 0 300 12" fill="none">
-                    <path d="M2 8C50 2 100 2 150 6C200 10 250 4 298 8" stroke="currentColor" strokeWidth="3" strokeLinecap="round" className="text-primary/40" />
+                <span className="block">answer from</span>
+                <span className="inline-block mt-2 relative">
+                  <span className="text-primary">your best self.</span>
+                  <svg className="absolute -bottom-1 left-0 w-full" viewBox="0 0 300 8" fill="none">
+                    <path d="M2 6C60 2 120 2 180 5C240 8 270 3 298 5" stroke="currentColor" strokeWidth="3" strokeLinecap="round" className="text-primary/50 animate-draw-line" />
                   </svg>
                 </span>
               </h1>
-              
-              <p className="mt-6 sm:mt-8 text-base sm:text-lg md:text-xl text-muted-foreground max-w-xl leading-relaxed">
-                You already know what that version feels like. The edge. The clarity. 
-                The complete aliveness that shows up in your best moments.
+
+              <p className="mt-8 text-lg sm:text-xl text-muted-foreground max-w-lg leading-relaxed">
+                You already know what that version feels like. The clarity.
+                The complete aliveness in your best moments.
               </p>
 
-              {/* CTA Form */}
-              <div className="mt-8 sm:mt-10 max-w-md">
+              {/* CTA Form - neubrutalist style */}
+              <div className="mt-10 max-w-md">
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <Input 
-                    placeholder="Enter your email" 
+                  <Input
+                    placeholder="Enter your email"
                     type="email"
-                    className="h-12 sm:h-14 text-base bg-background border-2 border-foreground/20 focus:border-primary rounded-xl"
+                    className="h-13 sm:h-14 text-base bg-card border-3 border-foreground/20 focus:border-primary rounded-xl px-4 font-medium placeholder:text-muted-foreground/60"
                   />
-                  <Button size="lg" className="h-12 sm:h-14 px-6 sm:px-8 text-base font-bold whitespace-nowrap rounded-xl neu-shadow hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all duration-200">
-                    Begin Experience
+                  <Button size="lg" className="h-13 sm:h-14 px-7 text-base font-extrabold whitespace-nowrap rounded-xl neu-border-primary neu-shadow-primary neu-btn-press">
+                    Begin
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </div>
-                <p className="mt-4 text-sm text-muted-foreground flex items-center gap-2">
-                  <Shield className="h-4 w-4 shrink-0" />
+                <p className="mt-4 text-sm text-muted-foreground flex items-center gap-2 font-medium">
+                  <Shield className="h-4 w-4 shrink-0 text-primary/60" />
                   Private and secure. No credit card required.
                 </p>
               </div>
 
-              {/* Social proof */}
-              <div className="mt-8 sm:mt-10 flex items-center gap-4 flex-wrap">
-                <div className="flex -space-x-2">
-                  {[1,2,3,4].map(i => (
-                    <div key={i} className="h-8 w-8 rounded-full border-2 border-background bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary">
+              {/* Social proof - neubrutalist pill */}
+              <div className="mt-10 inline-flex items-center gap-4 px-5 py-3 rounded-2xl border-3 border-foreground/8 bg-card">
+                <div className="flex -space-x-2.5">
+                  {[1,2,3,4,5].map(i => (
+                    <div key={i} className="h-9 w-9 rounded-full border-3 border-card bg-primary/10 flex items-center justify-center text-[10px] font-black text-primary">
                       {String.fromCharCode(64 + i)}
                     </div>
                   ))}
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  <span className="font-bold text-foreground">2,400+</span> leaders have experienced clarity
-                </p>
+                <div className="text-sm">
+                  <span className="font-black text-foreground">2,400+</span>
+                  <span className="text-muted-foreground font-medium"> leaders found clarity</span>
+                </div>
               </div>
             </div>
 
-            {/* Right - Image + Preview Card */}
+            {/* Right - Image + decorative elements */}
             <div className={`relative ${isVisible ? 'animate-fade-in-right delay-200' : 'opacity-0'}`}>
-              {/* Main Image */}
-              <div className="relative rounded-2xl overflow-hidden neu-border-primary neu-shadow-lg img-hover-zoom">
+              {/* Main Image - bold neubrutalist frame */}
+              <div className="relative rounded-2xl overflow-hidden neu-border neu-shadow-xl img-hover-zoom">
                 <Image
                   src="/images/hero-collab.jpg"
                   alt="Team collaborating on insights and clarity"
@@ -113,38 +116,18 @@ export function HeroSection() {
                   className="w-full h-auto object-cover aspect-4/3"
                   priority
                 />
-                {/* Overlay gradient */}
-                <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent" />
-                
-                {/* Floating Preview Card */}
-                {/* <div className="absolute bottom-4 left-4 right-4 sm:left-6 sm:right-6 sm:bottom-6">
-                  <div className="p-4 sm:p-5 rounded-xl bg-background/95 backdrop-blur-sm border-2 border-foreground/10 shadow-lg">
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold">
-                        <span className="relative flex h-2 w-2">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
-                          <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
-                        </span>
-                        Question 1 of 5
-                      </div>
-                    </div>
-                    <p className="text-sm sm:text-base font-semibold text-foreground leading-snug">
-                      When you are at your best, what does the world feel like?
-                    </p>
-                    <div className="mt-3 flex gap-2 flex-wrap">
-                      {["Clear & effortless", "Fully alive", "In flow"].map(opt => (
-                        <span key={opt} className="px-3 py-1.5 text-xs rounded-lg border-2 border-border bg-muted/50 text-muted-foreground hover:border-primary hover:text-primary transition-colors cursor-pointer font-medium">
-                          {opt}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div> */}
+                <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
               </div>
 
-              {/* Decorative element */}
-              <div className="absolute -top-4 -right-4 w-20 h-20 bg-primary/10 rounded-xl -z-10 hidden lg:block" />
-              <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-primary/20 rounded-lg -z-10 hidden lg:block" />
+              {/* Floating stat card - neubrutalist */}
+              <div className="absolute -bottom-6 -left-6 p-4 rounded-xl bg-card neu-border neu-shadow-sm hidden lg:block">
+                <p className="text-3xl font-black text-primary">10</p>
+                <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Minutes</p>
+              </div>
+
+              {/* Decorative shapes */}
+              <div className="absolute -top-4 -right-4 w-24 h-24 border-3 border-primary/20 rounded-xl -z-10 hidden lg:block" />
+              <div className="absolute -bottom-3 -right-3 w-16 h-16 bg-primary/10 -z-10 hidden lg:block" />
             </div>
           </div>
         </div>

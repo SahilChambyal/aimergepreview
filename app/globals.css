@@ -4,74 +4,74 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: #ffffff;
-  --foreground: #0a0a0a;
+  --background: #fafaf9;
+  --foreground: #0c0a09;
   --card: #ffffff;
-  --card-foreground: #0a0a0a;
+  --card-foreground: #0c0a09;
   --popover: #ffffff;
-  --popover-foreground: #0a0a0a;
-  --primary: #351EB7;
+  --popover-foreground: #0c0a09;
+  --primary: #2d1b9e;
   --primary-foreground: #ffffff;
-  --secondary: #f5f3ff;
-  --secondary-foreground: #1a1a1a;
+  --secondary: #f0edff;
+  --secondary-foreground: #0c0a09;
   --muted: #f5f3ff;
-  --muted-foreground: #6b7280;
-  --accent: #ede9fe;
-  --accent-foreground: #1a1a1a;
-  --destructive: #ef4444;
-  --destructive-foreground: #ef4444;
-  --border: #e9e5ff;
-  --input: #e9e5ff;
-  --ring: #351EB7;
+  --muted-foreground: #57534e;
+  --accent: #e8e4ff;
+  --accent-foreground: #0c0a09;
+  --destructive: #dc2626;
+  --destructive-foreground: #dc2626;
+  --border: #e7e5e4;
+  --input: #d6d3d1;
+  --ring: #2d1b9e;
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
+  --radius: 0.75rem;
   --sidebar: #fafafa;
-  --sidebar-foreground: #0a0a0a;
-  --sidebar-primary: #351EB7;
+  --sidebar-foreground: #0c0a09;
+  --sidebar-primary: #2d1b9e;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f5f3ff;
-  --sidebar-accent-foreground: #1a1a1a;
-  --sidebar-border: #e5e7eb;
-  --sidebar-ring: #351EB7;
+  --sidebar-accent: #f0edff;
+  --sidebar-accent-foreground: #0c0a09;
+  --sidebar-border: #e7e5e4;
+  --sidebar-ring: #2d1b9e;
 }
 
 .dark {
-  --background: #0f0a1f;
-  --foreground: #fafafa;
-  --card: #1a1329;
-  --card-foreground: #fafafa;
-  --popover: #1a1329;
-  --popover-foreground: #fafafa;
-  --primary: #6b5cd9;
-  --primary-foreground: #ffffff;
-  --secondary: #2a2040;
-  --secondary-foreground: #fafafa;
-  --muted: #2a2040;
-  --muted-foreground: #a1a1aa;
-  --accent: #2a2040;
-  --accent-foreground: #fafafa;
-  --destructive: #7f1d1d;
+  --background: #0a0718;
+  --foreground: #fafaf9;
+  --card: #140f26;
+  --card-foreground: #fafaf9;
+  --popover: #140f26;
+  --popover-foreground: #fafaf9;
+  --primary: #8b7cf6;
+  --primary-foreground: #0a0718;
+  --secondary: #1e1736;
+  --secondary-foreground: #fafaf9;
+  --muted: #1e1736;
+  --muted-foreground: #a8a29e;
+  --accent: #251d42;
+  --accent-foreground: #fafaf9;
+  --destructive: #991b1b;
   --destructive-foreground: #fca5a5;
-  --border: #3d2e5a;
-  --input: #3d2e5a;
-  --ring: #6b5cd9;
+  --border: #2e2548;
+  --input: #2e2548;
+  --ring: #8b7cf6;
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: #1a1329;
-  --sidebar-foreground: #fafafa;
-  --sidebar-primary: #6b5cd9;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #2a2040;
-  --sidebar-accent-foreground: #fafafa;
-  --sidebar-border: #3d2e5a;
-  --sidebar-ring: #6b5cd9;
+  --sidebar: #140f26;
+  --sidebar-foreground: #fafaf9;
+  --sidebar-primary: #8b7cf6;
+  --sidebar-primary-foreground: #0a0718;
+  --sidebar-accent: #1e1736;
+  --sidebar-accent-foreground: #fafaf9;
+  --sidebar-border: #2e2548;
+  --sidebar-ring: #8b7cf6;
 }
 
 @theme inline {
@@ -124,30 +124,62 @@
   }
 }
 
-/* Neubrutalism utility classes */
+/* ==========================================
+   NEUBRUTALISM DESIGN SYSTEM
+   ========================================== */
+
 @layer utilities {
-  .neu-shadow {
-    box-shadow: 4px 4px 0px 0px var(--primary);
+  /* Hard shadows - the signature neubrutalist effect */
+  .neu-shadow-xs {
+    box-shadow: 2px 2px 0px 0px var(--foreground);
   }
   .neu-shadow-sm {
-    box-shadow: 2px 2px 0px 0px var(--primary);
+    box-shadow: 3px 3px 0px 0px var(--foreground);
+  }
+  .neu-shadow {
+    box-shadow: 4px 4px 0px 0px var(--foreground);
+  }
+  .neu-shadow-md {
+    box-shadow: 5px 5px 0px 0px var(--foreground);
   }
   .neu-shadow-lg {
+    box-shadow: 6px 6px 0px 0px var(--foreground);
+  }
+  .neu-shadow-xl {
+    box-shadow: 8px 8px 0px 0px var(--foreground);
+  }
+
+  /* Primary-colored hard shadows */
+  .neu-shadow-primary-sm {
+    box-shadow: 3px 3px 0px 0px var(--primary);
+  }
+  .neu-shadow-primary {
+    box-shadow: 4px 4px 0px 0px var(--primary);
+  }
+  .neu-shadow-primary-lg {
     box-shadow: 6px 6px 0px 0px var(--primary);
   }
+
+  /* Thick neubrutalist borders */
   .neu-border {
-    border: 2px solid var(--foreground);
+    border: 3px solid var(--foreground);
   }
   .neu-border-primary {
-    border: 2px solid var(--primary);
+    border: 3px solid var(--primary);
+  }
+  .neu-border-thin {
+    border: 2px solid var(--foreground);
   }
 }
 
-/* Scroll-driven fade-in animation */
+/* ==========================================
+   ANIMATIONS & MICRO-INTERACTIONS
+   ========================================== */
+
 @keyframes fade-in-up {
   from {
     opacity: 0;
-    transform: translateY(24px);
+    transform: translateY(30px);
   }
   to {
     opacity: 1;
@@ -158,7 +190,7 @@
 @keyframes fade-in-left {
   from {
     opacity: 0;
-    transform: translateX(-24px);
+    transform: translateX(-30px);
   }
   to {
     opacity: 1;
@@ -169,11 +201,22 @@
 @keyframes fade-in-right {
   from {
     opacity: 0;
-    transform: translateX(24px);
+    transform: translateX(30px);
   }
   to {
     opacity: 1;
     transform: translateX(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
@@ -182,25 +225,59 @@
   50% { transform: translateY(-8px); }
 }
 
-@keyframes pulse-border {
-  0%, 100% { border-color: var(--primary); }
-  50% { border-color: transparent; }
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes draw-line {
+  from { stroke-dashoffset: 300; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes count-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 
 .animate-fade-in-up {
-  animation: fade-in-up 0.6s ease-out both;
+  animation: fade-in-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .animate-fade-in-left {
-  animation: fade-in-left 0.6s ease-out both;
+  animation: fade-in-left 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .animate-fade-in-right {
-  animation: fade-in-right 0.6s ease-out both;
+  animation: fade-in-right 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .animate-float {
   animation: float 3s ease-in-out infinite;
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+.animate-draw-line {
+  stroke-dasharray: 300;
+  stroke-dashoffset: 300;
+  animation: draw-line 1.2s ease-out forwards;
+}
+
+.animate-shimmer {
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
 }
 
 .delay-100 { animation-delay: 100ms; }
@@ -209,25 +286,72 @@
 .delay-400 { animation-delay: 400ms; }
 .delay-500 { animation-delay: 500ms; }
 .delay-600 { animation-delay: 600ms; }
+.delay-700 { animation-delay: 700ms; }
+.delay-800 { animation-delay: 800ms; }
+
+/* ==========================================
+   INTERACTIVE HOVER EFFECTS
+   ========================================== */
+
+/* Neubrutalist button press effect */
+.neu-btn-press {
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.neu-btn-press:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px 0px var(--foreground);
+}
+.neu-btn-press:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0px 0px 0px 0px var(--foreground);
+}
+
+/* Card lift on hover */
+.neu-card-hover {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.neu-card-hover:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px 0px var(--foreground);
+}
 
 /* Image hover zoom */
 .img-hover-zoom {
   overflow: hidden;
 }
 .img-hover-zoom img {
-  transition: transform 0.5s ease;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .img-hover-zoom:hover img {
-  transform: scale(1.05);
+  transform: scale(1.04);
 }
 
-/* Smooth scroll for the whole page */
+/* ==========================================
+   GLOBAL STYLES
+   ========================================== */
+
 html {
   scroll-behavior: smooth;
 }
 
-/* Selection color */
 ::selection {
   background-color: var(--primary);
   color: white;
+}
+
+/* Subtle grain texture for depth */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.015;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* Focus-visible for accessibility */
+:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
 }
