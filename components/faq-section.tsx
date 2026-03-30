@@ -53,16 +53,13 @@ export function FaqSection() {
             <span className="inline-block px-4 py-1.5 rounded-lg text-xs font-black uppercase tracking-widest text-primary bg-secondary neu-border-primary mb-6">
               FAQ
             </span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter text-foreground leading-[1.0]">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter text-foreground leading-none">
               Common
-              <span className="block text-primary">questions</span>
+              <span className="block text-primary mt-1">questions</span>
             </h2>
             <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
               Everything you need to know before you begin.
             </p>
-
-            {/* Decorative element */}
-            <div className="hidden lg:block mt-8 w-20 h-20 rounded-xl border-3 border-primary/20 bg-secondary/50" />
           </div>
 
           {/* Right Column - Accordion */}
@@ -72,7 +69,7 @@ export function FaqSection() {
                 <AccordionItem
                   key={index}
                   value={`item-${index}`}
-                  className="border-3 border-foreground/8 rounded-xl px-6 data-[state=open]:border-primary data-[state=open]:bg-secondary/30 transition-all duration-300 data-[state=open]:neu-shadow-primary-sm"
+                  className="border-2 border-border rounded-xl px-6 bg-card data-[state=open]:border-primary data-[state=open]:bg-secondary/30 transition-all duration-300 data-[state=open]:neu-shadow-primary-xs"
                 >
                   <AccordionTrigger className="text-left text-base sm:text-lg font-extrabold hover:text-primary transition-colors py-5 hover:no-underline">
                     {faq.question}

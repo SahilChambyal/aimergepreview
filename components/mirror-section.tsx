@@ -64,7 +64,7 @@ export function MirrorSection() {
           <span className="inline-block px-4 py-1.5 rounded-lg text-xs font-black uppercase tracking-widest text-primary bg-secondary neu-border-primary mb-6">
             How it works
           </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter text-foreground leading-[1.0]">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter text-foreground leading-none">
             A mirror. Not a test.
             <span className="block text-primary mt-1">Not a tool.</span>
           </h2>
@@ -76,20 +76,20 @@ export function MirrorSection() {
           </p>
         </div>
 
-        {/* Steps Grid - numbered neubrutalist cards */}
+        {/* Steps Grid — numbered neubrutalist cards */}
         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 lg:gap-8">
           {steps.map((step, index) => (
             <div
               key={index}
-              className={`group relative p-7 sm:p-8 rounded-2xl border-3 border-foreground/10 bg-card neu-card-hover ${isVisible ? `animate-fade-in-up delay-${(index + 1) * 100}` : 'opacity-0'} ${index === 2 ? 'sm:col-span-2 md:col-span-1' : ''}`}
+              className={`group relative p-7 sm:p-8 rounded-2xl bg-card neu-card overflow-hidden ${isVisible ? `animate-fade-in-up delay-${(index + 1) * 100}` : 'opacity-0'} ${index === 2 ? 'sm:col-span-2 md:col-span-1' : ''}`}
             >
-              {/* Step number */}
-              <span className="absolute -top-4 -left-2 text-7xl font-black text-primary/8 select-none leading-none">
+              {/* Step number — visible watermark */}
+              <span className="absolute -top-3 -left-1 text-8xl font-black text-primary/[0.07] select-none leading-none pointer-events-none">
                 {step.number}
               </span>
 
               <div className="relative">
-                <div className="flex h-13 w-13 items-center justify-center rounded-xl bg-primary/10 mb-6 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300 neu-border-thin group-hover:border-primary">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 border-2 border-primary/20 mb-6 group-hover:bg-primary group-hover:border-primary transition-all duration-300">
                   <step.icon className="h-6 w-6 text-primary group-hover:text-primary-foreground transition-colors" />
                 </div>
                 <h3 className="text-lg sm:text-xl font-black text-foreground">{step.title}</h3>
@@ -101,8 +101,8 @@ export function MirrorSection() {
           ))}
         </div>
 
-        {/* Outcomes Section - neubrutalist panel */}
-        <div className={`mt-16 sm:mt-20 p-8 sm:p-10 md:p-12 rounded-2xl neu-border-primary bg-secondary/50 neu-shadow-primary-sm ${isVisible ? 'animate-fade-in-up delay-500' : 'opacity-0'}`}>
+        {/* Outcomes Section */}
+        <div className={`mt-16 sm:mt-20 p-8 sm:p-10 md:p-12 rounded-2xl bg-secondary/50 neu-card-primary ${isVisible ? 'animate-fade-in-up delay-500' : 'opacity-0'}`}>
           <div className="max-w-4xl mx-auto">
             <h3 className="text-2xl sm:text-3xl font-black text-foreground text-center mb-10">
               What surfaces
@@ -110,7 +110,7 @@ export function MirrorSection() {
             <div className="grid sm:grid-cols-2 gap-6 lg:gap-8">
               {outcomes.map((outcome, index) => (
                 <div key={index} className="flex items-start gap-4 group">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-card border-3 border-primary/30 shrink-0 group-hover:bg-primary group-hover:border-primary transition-all duration-300">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-card border-2 border-primary/30 shrink-0 group-hover:bg-primary group-hover:border-primary transition-all duration-300">
                     <outcome.icon className="h-5 w-5 text-primary group-hover:text-primary-foreground transition-colors" />
                   </div>
                   <p className="text-foreground leading-relaxed pt-2.5 font-bold">{outcome.text}</p>

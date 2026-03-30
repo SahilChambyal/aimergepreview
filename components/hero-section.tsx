@@ -16,7 +16,7 @@ export function HeroSection() {
   return (
     <section className="relative min-h-[92vh] flex flex-col" id="hero">
       {/* Announcement Banner */}
-      <div className="border-b-3 border-foreground/8 bg-secondary/50">
+      <div className="border-b-2 border-foreground/8 bg-secondary/50">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-center gap-3 py-3 text-sm">
             <span className="relative flex h-2.5 w-2.5">
@@ -34,10 +34,10 @@ export function HeroSection() {
 
       {/* Hero Content */}
       <div className="flex-1 flex items-center justify-center relative">
-        {/* Background - subtle geometric shapes */}
+        {/* Background - geometric wireframe shapes */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-20 right-[10%] w-64 h-64 border-3 border-primary/10 rounded-full" />
-          <div className="absolute bottom-32 left-[5%] w-40 h-40 border-3 border-primary/8 rotate-45" />
+          <div className="absolute top-20 right-[10%] w-64 h-64 border-2 border-primary/10 rounded-full" />
+          <div className="absolute bottom-32 left-[5%] w-40 h-40 border-2 border-primary/8 rotate-45" />
           <div className="absolute top-1/3 left-1/4 w-3 h-3 bg-primary/20 rounded-full" />
           <div className="absolute top-1/2 right-1/3 w-2 h-2 bg-primary/30 rounded-full" />
         </div>
@@ -52,7 +52,7 @@ export function HeroSection() {
                 10 min experience
               </div>
 
-              {/* Headline - dramatic scale */}
+              {/* Headline */}
               <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tighter text-foreground leading-[0.95]">
                 <span className="block">One honest</span>
                 <span className="block">answer from</span>
@@ -69,15 +69,15 @@ export function HeroSection() {
                 The complete aliveness in your best moments.
               </p>
 
-              {/* CTA Form - neubrutalist style */}
+              {/* CTA Form */}
               <div className="mt-10 max-w-md">
                 <div className="flex flex-col sm:flex-row gap-3">
                   <Input
                     placeholder="Enter your email"
                     type="email"
-                    className="h-13 sm:h-14 text-base bg-card border-3 border-foreground/20 focus:border-primary rounded-xl px-4 font-medium placeholder:text-muted-foreground/60"
+                    className="h-12 sm:h-14 text-base bg-card border-2 border-foreground/20 focus:border-primary rounded-xl px-4 font-medium placeholder:text-muted-foreground/60"
                   />
-                  <Button size="lg" className="h-13 sm:h-14 px-7 text-base font-extrabold whitespace-nowrap rounded-xl neu-border-primary neu-shadow-primary neu-btn-press">
+                  <Button size="lg" className="h-12 sm:h-14 px-7 text-base font-extrabold whitespace-nowrap rounded-xl neu-border-primary neu-shadow-primary-sm neu-btn-press">
                     Begin
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
@@ -88,11 +88,11 @@ export function HeroSection() {
                 </p>
               </div>
 
-              {/* Social proof - neubrutalist pill */}
-              <div className="mt-10 inline-flex items-center gap-4 px-5 py-3 rounded-2xl border-3 border-foreground/8 bg-card">
+              {/* Social proof */}
+              <div className="mt-10 inline-flex items-center gap-4 px-5 py-3 rounded-2xl border-2 border-foreground/10 bg-card">
                 <div className="flex -space-x-2.5">
                   {[1,2,3,4,5].map(i => (
-                    <div key={i} className="h-9 w-9 rounded-full border-3 border-card bg-primary/10 flex items-center justify-center text-[10px] font-black text-primary">
+                    <div key={i} className="h-9 w-9 rounded-full border-2 border-card bg-primary/10 flex items-center justify-center text-[10px] font-black text-primary">
                       {String.fromCharCode(64 + i)}
                     </div>
                   ))}
@@ -104,10 +104,9 @@ export function HeroSection() {
               </div>
             </div>
 
-            {/* Right - Image + decorative elements */}
+            {/* Right - Image */}
             <div className={`relative ${isVisible ? 'animate-fade-in-right delay-200' : 'opacity-0'}`}>
-              {/* Main Image - bold neubrutalist frame */}
-              <div className="relative rounded-2xl overflow-hidden neu-border neu-shadow-xl img-hover-zoom">
+              <div className="relative rounded-2xl overflow-hidden neu-border neu-shadow-lg img-hover-zoom">
                 <Image
                   src="/images/hero-collab.jpg"
                   alt="Team collaborating on insights and clarity"
@@ -119,15 +118,15 @@ export function HeroSection() {
                 <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
               </div>
 
-              {/* Floating stat card - neubrutalist */}
-              <div className="absolute -bottom-6 -left-6 p-4 rounded-xl bg-card neu-border neu-shadow-sm hidden lg:block">
-                <p className="text-3xl font-black text-primary">10</p>
-                <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Minutes</p>
+              {/* Floating stat card */}
+              <div className="absolute -bottom-5 -left-5 p-4 rounded-xl bg-card neu-border neu-shadow-sm hidden lg:block">
+                <p className="text-3xl font-black text-primary leading-none">10</p>
+                <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide mt-1">Minutes</p>
               </div>
 
               {/* Decorative shapes */}
-              <div className="absolute -top-4 -right-4 w-24 h-24 border-3 border-primary/20 rounded-xl -z-10 hidden lg:block" />
-              <div className="absolute -bottom-3 -right-3 w-16 h-16 bg-primary/10 -z-10 hidden lg:block" />
+              <div className="absolute -top-3 -right-3 w-20 h-20 border-2 border-primary/20 rounded-xl -z-10 hidden lg:block" />
+              <div className="absolute -bottom-3 -right-3 w-14 h-14 bg-primary/10 -z-10 hidden lg:block" />
             </div>
           </div>
         </div>

@@ -65,15 +65,15 @@ export function TestimonialsSection() {
           </div>
         </div>
 
-        {/* Testimonials Grid - asymmetric bento layout */}
+        {/* Testimonials Grid */}
         <div className="grid sm:grid-cols-2 gap-5 sm:gap-6">
           {testimonials.map((testimonial, index) => (
             <div
               key={index}
-              className={`group relative p-7 sm:p-8 rounded-2xl border-3 bg-card transition-all duration-300 ${
+              className={`group relative p-7 sm:p-8 rounded-2xl bg-card transition-all duration-300 ${
                 testimonial.highlight
-                  ? 'border-primary neu-shadow-primary-sm neu-card-hover'
-                  : 'border-foreground/10 neu-card-hover'
+                  ? 'neu-card-primary'
+                  : 'neu-card'
               } ${isVisible ? `animate-fade-in-up delay-${(index + 1) * 100}` : 'opacity-0'}`}
             >
               {/* Quote icon */}
@@ -87,7 +87,7 @@ export function TestimonialsSection() {
               </blockquote>
 
               {/* Author */}
-              <div className="mt-8 pt-6 border-t-3 border-foreground/5 flex items-center justify-between flex-wrap gap-3">
+              <div className="mt-8 pt-6 border-t-2 border-foreground/5 flex items-center justify-between flex-wrap gap-3">
                 <div>
                   <p className="font-extrabold text-foreground">{testimonial.author}</p>
                   <p className="text-sm text-muted-foreground font-medium">{testimonial.company}</p>

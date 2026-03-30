@@ -19,7 +19,7 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 w-full border-b-3 border-foreground/10 bg-background/80 backdrop-blur-xl">
+      <header className="sticky top-0 z-50 w-full border-b-2 border-foreground/10 bg-background/80 backdrop-blur-xl">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 sm:h-18 items-center justify-between">
             {/* Logo */}
@@ -55,14 +55,13 @@ export function Header() {
                   className="relative px-4 py-2 text-sm font-bold text-muted-foreground hover:text-foreground transition-colors duration-200 rounded-lg group"
                 >
                   {link.label}
-                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-primary rounded-full transition-all duration-300 group-hover:w-2/3" />
+                  <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-primary rounded-full transition-all duration-300 group-hover:w-2/3" />
                 </Link>
               ))}
             </nav>
 
             {/* Right Actions */}
             <div className="flex items-center gap-3">
-              {/* CTA */}
               <Button className="hidden sm:inline-flex h-10 px-5 font-extrabold text-sm rounded-xl neu-border-primary neu-shadow-primary-sm neu-btn-press bg-primary text-primary-foreground">
                 Begin Experience
                 <ArrowRight className="ml-1.5 h-4 w-4" />
@@ -72,7 +71,7 @@ export function Header() {
               <button
                 aria-label="Open menu"
                 onClick={() => setMobileOpen(true)}
-                className="lg:hidden flex h-11 w-11 items-center justify-center rounded-xl neu-border-thin hover:neu-shadow-xs transition-all duration-200"
+                className="lg:hidden flex h-11 w-11 items-center justify-center rounded-xl border-2 border-foreground/15 hover:border-primary hover:neu-shadow-primary-xs transition-all duration-200"
               >
                 <Menu className="h-5 w-5" />
               </button>
@@ -81,20 +80,16 @@ export function Header() {
         </div>
       </header>
 
-      {/* Mobile Menu - Full Screen Overlay */}
+      {/* Mobile Menu */}
       {mobileOpen && (
         <div className="fixed inset-0 z-100 lg:hidden">
-          {/* Backdrop */}
           <div
             className="absolute inset-0 bg-foreground/50 backdrop-blur-sm animate-fade-in-up"
             onClick={() => setMobileOpen(false)}
             aria-hidden="true"
           />
-
-          {/* Menu Panel */}
-          <div className="absolute inset-x-0 top-0 bg-background border-b-3 border-foreground shadow-2xl animate-fade-in-up [animation-duration:0.3s]">
-            {/* Header row */}
-            <div className="flex items-center justify-between px-4 sm:px-6 h-16 sm:h-18 border-b-3 border-foreground/10">
+          <div className="absolute inset-x-0 top-0 bg-background border-b-2 border-foreground shadow-2xl animate-fade-in-up [animation-duration:0.3s]">
+            <div className="flex items-center justify-between px-4 sm:px-6 h-16 sm:h-18 border-b-2 border-foreground/10">
               <Link href="/" className="flex items-center" onClick={() => setMobileOpen(false)}>
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Colored%20%28Transparent%29-i3BIGX38o1jOu8WEN9AsCy09XzplWy.png"
@@ -118,13 +113,12 @@ export function Header() {
               <button
                 aria-label="Close menu"
                 onClick={() => setMobileOpen(false)}
-                className="flex h-11 w-11 items-center justify-center rounded-xl neu-border-thin hover:neu-shadow-xs transition-all duration-200"
+                className="flex h-11 w-11 items-center justify-center rounded-xl border-2 border-foreground/15 hover:border-primary transition-all duration-200"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
-            {/* Nav Links */}
             <nav className="px-4 sm:px-6 py-6 space-y-1">
               {navLinks.map((link, i) => (
                 <Link
@@ -140,7 +134,6 @@ export function Header() {
               ))}
             </nav>
 
-            {/* CTA */}
             <div className="px-4 sm:px-6 pb-6">
               <Button
                 onClick={() => setMobileOpen(false)}

@@ -122,6 +122,17 @@
   body {
     @apply bg-background text-foreground;
   }
+  /* Restore pointer cursor for all interactive elements */
+  button,
+  [role="button"],
+  a,
+  select,
+  summary,
+  [type="button"],
+  [type="submit"],
+  [type="reset"] {
+    cursor: pointer;
+  }
 }
 
 /* ==========================================
@@ -150,6 +161,9 @@
   }
 
   /* Primary-colored hard shadows */
+  .neu-shadow-primary-xs {
+    box-shadow: 2px 2px 0px 0px var(--primary);
+  }
   .neu-shadow-primary-sm {
     box-shadow: 3px 3px 0px 0px var(--primary);
   }
@@ -162,13 +176,39 @@
 
   /* Thick neubrutalist borders */
   .neu-border {
-    border: 3px solid var(--foreground);
+    border: 2px solid var(--foreground);
   }
   .neu-border-primary {
+    border: 2px solid var(--primary);
+  }
+  .neu-border-thick {
+    border: 3px solid var(--foreground);
+  }
+  .neu-border-primary-thick {
     border: 3px solid var(--primary);
   }
-  .neu-border-thin {
-    border: 2px solid var(--foreground);
+
+  /* Neubrutalist card - default state with subtle shadow + border */
+  .neu-card {
+    border: 2px solid var(--border);
+    box-shadow: 3px 3px 0px 0px var(--border);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .neu-card:hover {
+    border-color: var(--primary);
+    box-shadow: 5px 5px 0px 0px var(--primary);
+    transform: translate(-2px, -2px);
+  }
+
+  /* Primary-accent card variant */
+  .neu-card-primary {
+    border: 2px solid var(--primary);
+    box-shadow: 3px 3px 0px 0px var(--primary);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .neu-card-primary:hover {
+    box-shadow: 5px 5px 0px 0px var(--primary);
+    transform: translate(-2px, -2px);
   }
 }
 
@@ -293,26 +333,17 @@
    INTERACTIVE HOVER EFFECTS
    ========================================== */
 
-/* Neubrutalist button press effect */
+/* Neubrutalist button press effect (primary variant) */
 .neu-btn-press {
   transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .neu-btn-press:hover {
   transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0px 0px var(--foreground);
+  box-shadow: 1px 1px 0px 0px var(--primary);
 }
 .neu-btn-press:active {
-  transform: translate(4px, 4px);
-  box-shadow: 0px 0px 0px 0px var(--foreground);
-}
-
-/* Card lift on hover */
-.neu-card-hover {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.neu-card-hover:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px 0px var(--foreground);
+  transform: translate(3px, 3px);
+  box-shadow: 0px 0px 0px 0px var(--primary);
 }
 
 /* Image hover zoom */

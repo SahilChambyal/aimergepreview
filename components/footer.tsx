@@ -15,7 +15,7 @@ const socialLinks = [
 
 export function Footer() {
   return (
-    <footer className="border-t-3 border-foreground/10 bg-card">
+    <footer className="border-t-2 border-foreground/10 bg-card">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="py-12 sm:py-14 md:py-16">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
@@ -62,7 +62,7 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t-3 border-foreground/5 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="border-t-2 border-foreground/5 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground font-medium">
             &copy; {new Date().getFullYear()} AIMerge. All rights reserved.
           </p>
@@ -71,7 +71,7 @@ export function Footer() {
               <Link
                 key={link.label}
                 href={link.href}
-                className="flex h-10 w-10 items-center justify-center rounded-xl border-3 border-foreground/10 text-muted-foreground hover:text-primary hover:border-primary hover:neu-shadow-xs transition-all duration-200"
+                className="flex h-10 w-10 items-center justify-center rounded-xl border-2 border-foreground/10 text-muted-foreground hover:text-primary hover:border-primary hover:neu-shadow-primary-xs transition-all duration-200"
                 aria-label={link.label}
               >
                 <link.icon className="h-4 w-4" />

@@ -49,7 +49,7 @@ export function BestSelfSection() {
           <span className="inline-block px-4 py-1.5 rounded-lg text-xs font-black uppercase tracking-widest text-primary bg-secondary neu-border-primary mb-6">
             Why this works
           </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter text-foreground leading-[1.0]">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter text-foreground leading-none">
             Your best self is not
             <span className="block text-primary mt-1">occasional.</span>
           </h2>
@@ -60,7 +60,7 @@ export function BestSelfSection() {
 
         {/* Two Column Layout */}
         <div className="mt-16 sm:mt-20 grid lg:grid-cols-2 gap-12 lg:gap-20">
-          {/* Left Column - Content + Image */}
+          {/* Left Column */}
           <div className={`space-y-6 ${isVisible ? 'animate-fade-in-left delay-200' : 'opacity-0'}`}>
             <p className="text-lg text-muted-foreground leading-relaxed">
               You have been there before. That morning when the thinking was clear and the decisions came easily and you moved through your day without the usual friction.
@@ -69,7 +69,7 @@ export function BestSelfSection() {
               That conversation where you saw exactly what needed to happen and everyone in the room felt it too.
             </p>
 
-            {/* Image - neubrutalist frame */}
+            {/* Image */}
             <div className="relative rounded-2xl overflow-hidden neu-border neu-shadow-md img-hover-zoom my-8">
               <Image
                 src="/images/corporate-meeting.jpg"
@@ -90,7 +90,7 @@ export function BestSelfSection() {
               That version of you is not a fluke. It is not luck. It is not the result of the right sleep or the right conditions.
             </p>
 
-            {/* Pull quote - neubrutalist border */}
+            {/* Pull quote */}
             <div className="p-5 rounded-xl border-l-4 border-primary bg-secondary/50">
               <p className="text-lg font-bold text-foreground leading-relaxed">
                 It is what you are capable of when everything unnecessary falls away.
@@ -98,21 +98,21 @@ export function BestSelfSection() {
             </div>
 
             <div className="pt-4">
-              <Button size="lg" className="h-13 sm:h-14 px-8 text-base font-extrabold rounded-xl neu-border-primary neu-shadow-primary neu-btn-press">
+              <Button size="lg" className="h-12 sm:h-14 px-8 text-base font-extrabold rounded-xl neu-border-primary neu-shadow-primary-sm neu-btn-press">
                 Begin the experience
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
           </div>
 
-          {/* Right Column - Credentials + Card */}
+          {/* Right Column */}
           <div className={`space-y-6 ${isVisible ? 'animate-fade-in-right delay-300' : 'opacity-0'}`}>
-            {/* Credentials Grid - neubrutalist cards */}
+            {/* Credentials Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {credentials.map((credential, index) => (
                 <div
                   key={index}
-                  className="group p-5 rounded-xl border-3 border-foreground/10 bg-card neu-card-hover cursor-default"
+                  className="group p-5 rounded-xl bg-card neu-card cursor-default"
                 >
                   <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10 mb-4 group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300">
                     <credential.icon className="h-5 w-5 text-primary group-hover:text-primary-foreground transition-colors" />
@@ -123,16 +123,16 @@ export function BestSelfSection() {
               ))}
             </div>
 
-            {/* The Problem Card - neubrutalist */}
-            <div className="p-7 sm:p-8 rounded-2xl neu-border bg-card neu-shadow-sm">
+            {/* The Problem Card */}
+            <div className="p-7 sm:p-8 rounded-2xl bg-card neu-card-primary">
               <h3 className="text-xl sm:text-2xl font-black text-foreground">The problem is not finding it.</h3>
               <p className="mt-4 text-muted-foreground leading-relaxed">
                 Most leaders at your level have found it — in retreats, in rare moments, in the right conversations.
               </p>
               <p className="mt-3 text-muted-foreground leading-relaxed">
-                The problem is <span className="text-foreground font-extrabold underline decoration-primary decoration-3 underline-offset-4">making it stay.</span>
+                The problem is <span className="text-foreground font-extrabold underline decoration-primary decoration-2 underline-offset-4">making it stay.</span>
               </p>
-              <div className="mt-6 pt-6 border-t-3 border-foreground/5">
+              <div className="mt-6 pt-6 border-t-2 border-primary/15">
                 <p className="text-foreground leading-relaxed">
                   And when you make the decisions that come from that place — not from pressure, not from urgency, but from complete clarity — something else shifts too.
                 </p>

@@ -22,17 +22,17 @@ export function CtaBanner() {
   return (
     <section ref={sectionRef} className="py-20 sm:py-24 md:py-32 lg:py-40 relative overflow-hidden bg-secondary/30">
       {/* Decorative borders */}
-      <div className="absolute top-0 left-0 right-0 h-[3px] bg-primary/15" />
-      <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-primary/15" />
+      <div className="absolute top-0 left-0 right-0 h-0.5 bg-primary/15" />
+      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary/15" />
 
       {/* Background shapes */}
-      <div className="absolute top-10 right-[10%] w-48 h-48 border-3 border-primary/8 rounded-full" />
-      <div className="absolute bottom-10 left-[5%] w-32 h-32 border-3 border-primary/6 rotate-12" />
+      <div className="absolute top-10 right-[10%] w-48 h-48 border-2 border-primary/8 rounded-full" />
+      <div className="absolute bottom-10 left-[5%] w-32 h-32 border-2 border-primary/6 rotate-12" />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         <div className={`grid lg:grid-cols-2 gap-12 lg:gap-20 items-center ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`}>
           {/* Left - Image */}
-          <div className="relative rounded-2xl overflow-hidden neu-border neu-shadow-xl img-hover-zoom order-2 lg:order-1">
+          <div className="relative rounded-2xl overflow-hidden neu-border neu-shadow-lg img-hover-zoom order-2 lg:order-1">
             <Image
               src="/images/handshake.jpg"
               alt="Beginning your journey to permanent clarity"
@@ -53,7 +53,7 @@ export function CtaBanner() {
             <span className="inline-block px-4 py-1.5 rounded-lg text-xs font-black uppercase tracking-widest text-primary bg-secondary neu-border-primary mb-6">
               Start now
             </span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter text-foreground leading-[1.0]">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter text-foreground leading-none">
               Your highest level
               <span className="block text-primary mt-2">is closer than you think.</span>
             </h2>
@@ -68,9 +68,9 @@ export function CtaBanner() {
                 <Input
                   placeholder="Enter your email"
                   type="email"
-                  className="h-13 sm:h-14 text-base bg-card border-3 border-foreground/20 focus:border-primary rounded-xl px-4 font-medium placeholder:text-muted-foreground/60"
+                  className="h-12 sm:h-14 text-base bg-card border-2 border-foreground/20 focus:border-primary rounded-xl px-4 font-medium placeholder:text-muted-foreground/60"
                 />
-                <Button size="lg" className="h-13 sm:h-14 px-7 text-base font-extrabold whitespace-nowrap rounded-xl neu-border-primary neu-shadow-primary neu-btn-press">
+                <Button size="lg" className="h-12 sm:h-14 px-7 text-base font-extrabold whitespace-nowrap rounded-xl neu-border-primary neu-shadow-primary-sm neu-btn-press">
                   Begin
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
